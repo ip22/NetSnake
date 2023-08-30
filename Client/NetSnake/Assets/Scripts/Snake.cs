@@ -3,9 +3,22 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     [SerializeField] private Transform _head;
+    [SerializeField] private Tail _tailPrefab;
 
     [SerializeField] private float _speed = 2f;
     [SerializeField] private float _rotateSpeed = 90f;
+
+    private Tail _tail;
+
+    public void Init(int segmentsCount) {
+        _tail = Instantiate(_tailPrefab, transform.position, Quaternion.identity);
+        _tail.Init(_head, _speed, segmentsCount);
+    }
+
+    public void Destroy() {
+        _tail.Destroy();
+        Destroy(gameObject);
+    }
 
     private void Update() {
         Move();

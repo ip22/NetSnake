@@ -3,11 +3,13 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     [SerializeField] private Transform _cursor;
-    [SerializeField] private Snake _snake;
+    
+    private Snake _snake;
     private Camera _camera;
     private Plane _plane;
 
-    private void Awake() {
+    public void Init(Snake snake) {
+        _snake = snake;
         _camera = Camera.main;
         _plane = new Plane(Vector3.up, Vector3.zero);
     }
