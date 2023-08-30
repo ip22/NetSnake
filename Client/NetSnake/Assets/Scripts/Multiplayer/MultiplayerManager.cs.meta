@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d1153ca9d2387a748aa8a2583c10d759
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _colyseusSettings: {fileID: 11400000, guid: 0176be93a8c0a0048bc1ab6e4dc767de,
+      type: 2}
+  - _controllerPrefab: {fileID: 1419633222110438754, guid: 5349cb629abc7e94885e64dcce2a1058,
+      type: 3}
+  - _snakePrefab: {fileID: 6320897050619628092, guid: a2c73566fe33fcd4faf591cc035b2ed2,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

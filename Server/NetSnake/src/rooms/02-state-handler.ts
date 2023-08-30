@@ -2,7 +2,9 @@ import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 
 export class Player extends Schema {
-
+    @type("number") x = Math.floor(Math.random() * 256) - 128;
+    @type("number") z = Math.floor(Math.random() * 256) - 128;
+    @type("uint8") sg = 5;
 }
 
 export class State extends Schema {
@@ -11,7 +13,7 @@ export class State extends Schema {
 
     something = "This attribute won't be sent to the client-side";
 
-    createPlayer(sessionId: string, data: any, skin: number) {
+    createPlayer(sessionId: string) {
         const player = new Player();       
 
         this.players.set(sessionId, player);
@@ -22,36 +24,23 @@ export class State extends Schema {
     }
 
     movePlayer (sessionId: string, data: any) {  
-        const player = this.players.get(sessionId);      
+        const player = this.players.get(sessionId);     
 
+        player.x = data.x;
+        player.x = data.z;
     }
 }
 
 export class StateHandlerRoom extends Room<State> {
     maxClients = 2;
 
-    skins: number[] = [0];
-
-    mixArray(arr){
-        var currentIndex = arr.length;
-        var tmpValue, randomIndex;
-        
-        while(currentIndex !== 0){
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-            tmpValue = arr[currentIndex];
-            arr[currentIndex] = arr[randomIndex];
-            arr[randomIndex] = tmpValue;
-        }
-    }
-
     onCreate (options) {
-        for(var i = 1; i < options.skins; i++){
-            this.skins.push(i);
-        }
-
-        this.mixArray(this.skins);
-    
+        this.setState(new State());   
+        
+        this.onMessage("move",(client, dada) =>{
+            this.state.movePlayer(client.sessionId, dada);
+        })
+        
     }
 
     onAuth(client, options, req) {
@@ -61,8 +50,7 @@ export class StateHandlerRoom extends Room<State> {
     onJoin (client: Client, data: any) {
         if(this.clients.length > 1) this.lock();
 
-        const skin = this.skins[this.clients.length - 1];
-        this.state.createPlayer(client.sessionId, data, skin);
+        this.state.createPlayer(client.sessionId);
     }
 
     onLeave (client) {
