@@ -1,6 +1,11 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 
+export class Vector2float extends Schema{
+    @type("number") x = Math.floor(Math.random() * 256) - 128;
+    @type("number") z = Math.floor(Math.random() * 256) - 128;
+}
+
 export class Player extends Schema {
     @type("uint8") skin = 0;
     //Math.floor(Math.random() * 256) - 128
@@ -74,7 +79,7 @@ export class StateHandlerRoom extends Room<State> {
     //}
 
     onJoin (client: Client, data: any) {
-        const skin = this.skin;
+        const skin = data.skin;
         this.state.createPlayer(client.sessionId, skin);
     }
 
