@@ -77,6 +77,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5eaee34c712584689cd5526c428807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cameraOffSetY: 24
+  _cameraRotationOffSet: {x: 60, y: 0, z: 0}
+  _rate: 10
   _cursor: {fileID: 9022331152465994560}
 --- !u!1 &7159648419905445158
 GameObject:

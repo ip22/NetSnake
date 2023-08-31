@@ -2,8 +2,9 @@ import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 
 export class Player extends Schema {
-    @type("number") x = Math.floor(Math.random() * 256) - 128;
-    @type("number") z = Math.floor(Math.random() * 256) - 128;
+    //Math.floor(Math.random() * 256) - 128
+    @type("number") x = 0;
+    @type("number") z = 0;
     @type("uint8") sg = 5;
 }
 
@@ -13,9 +14,8 @@ export class State extends Schema {
 
     something = "This attribute won't be sent to the client-side";
 
-    createPlayer(sessionId: string) {
-        const player = new Player();       
-
+    createPlayer(sessionId: string) {   
+        const player = new Player();
         this.players.set(sessionId, player);
     }
 
@@ -27,29 +27,28 @@ export class State extends Schema {
         const player = this.players.get(sessionId);     
 
         player.x = data.x;
-        player.x = data.z;
+        player.z = data.z;
     }
 }
 
 export class StateHandlerRoom extends Room<State> {
-    maxClients = 2;
+    maxClients = 6;
 
     onCreate (options) {
+        console.log("StateHandlerRoom created!");
+        
         this.setState(new State());   
         
         this.onMessage("move",(client, dada) =>{
             this.state.movePlayer(client.sessionId, dada);
         })
-        
     }
 
-    onAuth(client, options, req) {
-        return true;
-    }
+    //onAuth(client, options, req) {
+    //    return true;
+    //}
 
     onJoin (client: Client, data: any) {
-        if(this.clients.length > 1) this.lock();
-
         this.state.createPlayer(client.sessionId);
     }
 
@@ -60,5 +59,4 @@ export class StateHandlerRoom extends Room<State> {
     onDispose () {
         console.log("Dispose StateHandlerRoom");
     }
-
 }

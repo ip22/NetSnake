@@ -51,7 +51,7 @@ public class Tail : MonoBehaviour
         }
     }
 
-    private void SetSegmentsCount(int segmentsCount) {
+    public void SetSegmentsCount(int segmentsCount) {
         if (segmentsCount == _segments.Count - 1) return;
 
         int diff = (_segments.Count - 1) - segmentsCount;
@@ -95,5 +95,4 @@ public class Tail : MonoBehaviour
     public void Destroy() {
         foreach (var segment in _segments) Destroy(segment.gameObject);
     }
-
 }

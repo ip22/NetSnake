@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class Snake : MonoBehaviour
 {
+    public float speed { get { return _speed; } }
+
     [SerializeField] private Transform _head;
     [SerializeField] private Tail _tailPrefab;
 
     [SerializeField] private float _speed = 2f;
-    [SerializeField] private float _rotateSpeed = 90f;
 
     private Tail _tail;
 
@@ -15,30 +16,18 @@ public class Snake : MonoBehaviour
         _tail.Init(_head, _speed, segmentsCount);
     }
 
+    public void SetSegmentsCount(int segmentsCount) => _tail.SetSegmentsCount(segmentsCount);
+
+    public void SetRotation(Vector3 pointToLook) => _head.LookAt(pointToLook);
+
+    private void Update() {
+        Move();
+    }
+
+    private void Move() => transform.position += _head.forward * Time.deltaTime * _speed;
+
     public void Destroy() {
         _tail.Destroy();
         Destroy(gameObject);
     }
-
-    private void Update() {
-        Move();
-        Rotate();
-    }
-
-    private void Rotate() {
-        Quaternion targetRotaion = Quaternion.LookRotation(_targeDirection);
-        _head.rotation = Quaternion.RotateTowards(_head.rotation, targetRotaion, Time.deltaTime * _rotateSpeed);
-    }
-
-    private void Move() {
-        transform.position += _head.forward * Time.deltaTime * _speed;
-    }
-
-    private Vector3 _targeDirection = Vector3.zero;
-
-    public void LookAt(Vector3 cursorPosition) {
-        _targeDirection = cursorPosition - _head.position;
-    }
-
-    public void GetMoveInfo(out Vector3 position) => position = transform.position;
 }
