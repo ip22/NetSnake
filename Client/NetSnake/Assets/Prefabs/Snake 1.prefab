@@ -49,7 +49,6 @@ MonoBehaviour:
   _tailPrefab: {fileID: 83227165977436793, guid: 2f31faf012f28ee49ba52ae9c1a8badd,
     type: 3}
   _speed: 5
-  _rotateSpeed: 180
 --- !u!1 &4418126019271489627
 GameObject:
   m_ObjectHideFlags: 0

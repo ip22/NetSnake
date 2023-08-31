@@ -2,9 +2,10 @@ import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 
 export class Player extends Schema {
+    @type("uint8") skin = 0;
     //Math.floor(Math.random() * 256) - 128
-    @type("number") x = 0;
-    @type("number") z = 0;
+    @type("number") x = Math.floor(Math.random() * 256) - 128;
+    @type("number") z = Math.floor(Math.random() * 256) - 128;
     @type("uint8") sg = 5;
 }
 
@@ -14,8 +15,9 @@ export class State extends Schema {
 
     something = "This attribute won't be sent to the client-side";
 
-    createPlayer(sessionId: string) {   
+    createPlayer(sessionId: string, skin: number) {   
         const player = new Player();
+        player.skin = skin;
         this.players.set(sessionId, player);
     }
 
@@ -34,9 +36,28 @@ export class State extends Schema {
 export class StateHandlerRoom extends Room<State> {
     maxClients = 6;
 
-    onCreate (options) {
-        console.log("StateHandlerRoom created!");
+    skins: number[] = [0];
+
+    mixArray(arr){
+        var currentIndex = arr.length;
+        var tmpValue, randomIndex;
         
+        while(currentIndex !== 0){
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            tmpValue = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = tmpValue;
+        }
+    }
+
+    onCreate (options) {
+        for(var i = 1; i < options.skins; i++){
+            this.skins.push(i);
+        }
+
+        this.mixArray(this.skins);
+
         this.setState(new State());   
         
         this.onMessage("move",(client, dada) =>{
@@ -49,7 +70,8 @@ export class StateHandlerRoom extends Room<State> {
     //}
 
     onJoin (client: Client, data: any) {
-        this.state.createPlayer(client.sessionId);
+        const skin = this.skins[this.clients.length - 1];
+        this.state.createPlayer(client.sessionId, skin);
     }
 
     onLeave (client) {

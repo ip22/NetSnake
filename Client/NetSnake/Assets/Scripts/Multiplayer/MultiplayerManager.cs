@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
+    [field: SerializeField] public Skins skins;
+
     #region Server
     private const string GameRoomName = "state_handler";
 
@@ -18,7 +20,11 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     }
 
     private async void Connection() {
-        _room = await Instance.client.JoinOrCreate<State>(GameRoomName);
+        Dictionary<string, object> data = new Dictionary<string, object>() {
+            {"skins", skins.length } 
+        };
+
+        _room = await Instance.client.JoinOrCreate<State>(GameRoomName, data);
         _room.OnStateChange += OnChange;
     }
 
@@ -65,6 +71,8 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
         var controller = Instantiate(_controllerPrefab);
         controller.Init(aim, player, snake);
+
+        snake.SetSkin(skins.GetMaterial(player.skin));
     }
     #endregion
 
@@ -81,6 +89,8 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         enemy.Init(player, snake);
 
         _enemies.Add(key, enemy);
+
+        snake.SetSkin(skins.GetMaterial(player.skin));
     }
 
     private void RemoveEnemy(string key, Player player) {

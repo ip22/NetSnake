@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -90,6 +91,13 @@ public class Tail : MonoBehaviour
 
         _positionHistory.RemoveAt(_positionHistory.Count - 1);
         _rotationHistory.RemoveAt(_rotationHistory.Count - 1);
+    }
+
+    internal void SetSkin(Material skin) {
+        GetComponent<SetSkin>().Set(skin);
+        foreach (var segment in _segments) {
+            segment.gameObject.GetComponent<SetSkin>().Set(skin);
+        }
     }
 
     public void Destroy() {

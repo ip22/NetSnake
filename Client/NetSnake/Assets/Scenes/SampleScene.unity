@@ -2088,6 +2088,7 @@ GameObject:
   m_Component:
   - component: {fileID: 340249525}
   - component: {fileID: 340249524}
+  - component: {fileID: 340249526}
   m_Layer: 0
   m_Name: Multiplayer Manager
   m_TagString: Untagged
@@ -2111,8 +2112,9 @@ MonoBehaviour:
   _aim: {fileID: 2403074805118944960, guid: 11ba06dcfaeb4ea46bc7f61aaa52a7cb, type: 3}
   _controllerPrefab: {fileID: 1419633222110438754, guid: 5349cb629abc7e94885e64dcce2a1058,
     type: 3}
-  _snakePrefab: {fileID: 6320897050619628092, guid: a2c73566fe33fcd4faf591cc035b2ed2,
+  _snakePrefab: {fileID: 5180654188764040971, guid: a2c73566fe33fcd4faf591cc035b2ed2,
     type: 3}
+  skins: {fileID: 340249526}
 --- !u!4 &340249525
 Transform:
   m_ObjectHideFlags: 0
@@ -2128,6 +2130,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &340249526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340249523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cbccd10f502d6446928a3012db03e0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _materials:
+  - {fileID: 2100000, guid: d964148043be23d468e258db7134114c, type: 2}
+  - {fileID: 2100000, guid: 330eb43c3a9616c44a0b6bc676c9c04c, type: 2}
+  - {fileID: 2100000, guid: 2e925d3c3516ba7429de95eef837b8fb, type: 2}
+  - {fileID: 2100000, guid: 56d8eb6083ceb244fbce67973b0115a7, type: 2}
+  - {fileID: 2100000, guid: 4c4eebcf90f0c664daaea0407e9228ce, type: 2}
+  - {fileID: 2100000, guid: 9ed49d3c8742fbc48a3df75c737caf49, type: 2}
 --- !u!1001 &342198789
 PrefabInstance:
   m_ObjectHideFlags: 0
