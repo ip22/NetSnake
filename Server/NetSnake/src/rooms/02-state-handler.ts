@@ -13,7 +13,9 @@ export class State extends Schema {
     @type({ map: Player })
     players = new MapSchema<Player>();
 
-    something = "This attribute won't be sent to the client-side";
+    createApple(){
+
+    }
 
     createPlayer(sessionId: string, skin: number) {   
         const player = new Player();
@@ -35,10 +37,11 @@ export class State extends Schema {
 
 export class StateHandlerRoom extends Room<State> {
     maxClients = 6;
-
+    startAppleCount = 100;
+    skin = 0;
     skins: number[] = [0];
 
-    mixArray(arr){
+    /*mixArray(arr){
         var currentIndex = arr.length;
         var tmpValue, randomIndex;
         
@@ -49,19 +52,20 @@ export class StateHandlerRoom extends Room<State> {
             arr[currentIndex] = arr[randomIndex];
             arr[randomIndex] = tmpValue;
         }
-    }
+    }*/
 
     onCreate (options) {
         for(var i = 1; i < options.skins; i++){
             this.skins.push(i);
         }
 
-        this.mixArray(this.skins);
+        this.skin = options.skin;
+        //this.mixArray(this.skins);
 
         this.setState(new State());   
         
-        this.onMessage("move",(client, dada) =>{
-            this.state.movePlayer(client.sessionId, dada);
+        this.onMessage("move",(client, data) =>{
+            this.state.movePlayer(client.sessionId, data);
         })
     }
 
@@ -70,7 +74,7 @@ export class StateHandlerRoom extends Room<State> {
     //}
 
     onJoin (client: Client, data: any) {
-        const skin = this.skins[this.clients.length - 1];
+        const skin = this.skin;
         this.state.createPlayer(client.sessionId, skin);
     }
 

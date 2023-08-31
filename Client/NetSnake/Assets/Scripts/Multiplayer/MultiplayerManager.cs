@@ -16,12 +16,13 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         base.Awake();
         DontDestroyOnLoad(this.gameObject);
         Instance.InitializeClient();
-        Connection();
+        //Connection();
     }
 
-    private async void Connection() {
+    public async void Connection(int skinIndex) {
         Dictionary<string, object> data = new Dictionary<string, object>() {
-            {"skins", skins.length } 
+            {"skins", skins.length },
+            { "skin", skinIndex }
         };
 
         _room = await Instance.client.JoinOrCreate<State>(GameRoomName, data);
