@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    private string _clientID;
     private Player _player;
     private Snake _snake;
 
-    public void Init(Player player, Snake snake) {
+    public void Init(string clientID, Player player, Snake snake) {
+        _clientID = clientID;
         _player = player;
         _snake = snake;
         _player.OnChange += OnChange;
@@ -24,7 +26,7 @@ public class EnemyController : MonoBehaviour
                 case "z":
                     position.z = (float)changes[i].Value;
                     break;
-                case "sg":
+                case "seg":
                     _snake.SetSegmentsCount((byte)changes[i].Value);
                     break;
                 default:
@@ -38,6 +40,6 @@ public class EnemyController : MonoBehaviour
 
     public void Destroy() {
         _player.OnChange -= OnChange;
-        _snake.Destroy();
+        _snake.Destroy(_clientID);
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +5,7 @@ public class Tail : MonoBehaviour
 {
     [SerializeField] private Transform _segmentPrefab;
     [SerializeField] private float _segmentInterval = 1f;
+    private Material _segmentSkin;
 
     private Transform _head;
     private float _snakeSpeed = 2f;
@@ -15,7 +15,20 @@ public class Tail : MonoBehaviour
     private List<Vector3> _positionHistory = new List<Vector3>();
     private List<Quaternion> _rotationHistory = new List<Quaternion>();
 
-    public void Init(Transform head, float speed, int segmentsCount) {
+    private int _playerLayer;
+    private bool _isPlayer;
+    private void SetPlayerLayer(GameObject gameObject) {
+        gameObject.layer = _playerLayer;
+        var childrens = GetComponentsInChildren<Transform>();
+        foreach (var child in childrens) child.gameObject.layer = _playerLayer;
+    }
+
+    public void Init(Transform head, float speed, int segmentsCount, int playerLayer, bool isPlayer) {
+        _playerLayer = playerLayer;
+        _isPlayer = isPlayer;
+
+        if (_isPlayer) SetPlayerLayer(gameObject);
+
         _head = head;
         _snakeSpeed = speed;
 
@@ -29,6 +42,7 @@ public class Tail : MonoBehaviour
 
         SetSegmentsCount(segmentsCount);
     }
+
     private void Update() {
         var distance = (_head.position - _positionHistory[0]).magnitude;
 
@@ -72,6 +86,9 @@ public class Tail : MonoBehaviour
         Vector3 position = _segments[_segments.Count - 1].position;
         Quaternion rotation = _segments[_segments.Count - 1].rotation;
         var segment = Instantiate(_segmentPrefab, position, rotation);
+        segment.gameObject.GetComponent<SetSkin>().Set(_segmentSkin);
+
+        if (_isPlayer) SetPlayerLayer(segment.gameObject);
 
         _segments.Insert(0, segment);
 
@@ -93,14 +110,50 @@ public class Tail : MonoBehaviour
         _rotationHistory.RemoveAt(_rotationHistory.Count - 1);
     }
 
-    internal void SetSkin(Material skin) {
+    public SegmentsPositions GetSegmentsPositions() {
+        int count = _segments.Count;
+
+        SegmentPosition[] sp = new SegmentPosition[count];
+
+        for (int i = 0; i < count; i++) {
+            sp[i] = new SegmentPosition() {
+                x = _segments[i].position.x,
+                z = _segments[i].position.z
+            };
+        }
+
+        SegmentsPositions segmentPositions = new SegmentsPositions() {
+            sPs = sp
+        };
+
+        return segmentPositions;
+
+    }
+
+    public void SetSkin(Material skin) {
         GetComponent<SetSkin>().Set(skin);
         foreach (var segment in _segments) {
             segment.gameObject.GetComponent<SetSkin>().Set(skin);
         }
+        _segmentSkin = skin;
     }
 
     public void Destroy() {
         foreach (var segment in _segments) Destroy(segment.gameObject);
     }
+
+}
+
+[System.Serializable]
+public struct SegmentPosition
+{
+    public float x;
+    public float z;
+}
+
+[System.Serializable]
+public struct SegmentsPositions
+{
+    public string id;
+    public SegmentPosition[] sPs;
 }

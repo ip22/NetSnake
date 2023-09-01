@@ -16,16 +16,18 @@ public class Controller : MonoBehaviour
 
     private PlayerAim _aim;
     private Player _player;
+    private string _clientID;
     private Snake _snake;
     private Camera _camera;
     private Plane _plane;
 
     private MultiplayerManager _multiplayerManager;
 
-    public void Init(PlayerAim aim, Player player, Snake snake) {
+    public void Init(string clientID, PlayerAim aim, Player player, Snake snake) {
         _multiplayerManager = MultiplayerManager.Instance;
 
         _aim = aim;
+        _clientID = clientID;
         _player = player;
         _snake = snake;
         _camera = Camera.main;
@@ -41,7 +43,6 @@ public class Controller : MonoBehaviour
             MoveCursor();
             _aim.SetTargetDirection(_cursor.position);
         }
-
         SendMove();
     }
 
@@ -75,11 +76,11 @@ public class Controller : MonoBehaviour
                 case "z":
                     position.z = (float)changes[i].Value;
                     break;
-                case "sg":
+                case "seg":
                     _snake.SetSegmentsCount((byte)changes[i].Value);
                     break;
                 default:
-                    Debug.LogWarning("Can,t read field changes:" + changes[i].Value);
+                    Debug.LogWarning("Can't read field changes:" + changes[i].Value);
                     break;
             }
         }
@@ -89,6 +90,7 @@ public class Controller : MonoBehaviour
 
     public void Destroy() {
         _player.OnChange -= OnChange;
-        _snake.Destroy();
+        _snake.Destroy(_clientID);
+        Destroy(gameObject);
     }
 }

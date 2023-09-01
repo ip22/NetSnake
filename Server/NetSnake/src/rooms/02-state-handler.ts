@@ -1,25 +1,43 @@
 import { Room, Client } from "colyseus";
-import { Schema, type, MapSchema } from "@colyseus/schema";
+import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 
 export class Vector2float extends Schema{
+    @type("uint32") id = 0;
     @type("number") x = Math.floor(Math.random() * 256) - 128;
     @type("number") z = Math.floor(Math.random() * 256) - 128;
 }
 
 export class Player extends Schema {
     @type("uint8") skin = 0;
-    //Math.floor(Math.random() * 256) - 128
     @type("number") x = Math.floor(Math.random() * 256) - 128;
     @type("number") z = Math.floor(Math.random() * 256) - 128;
-    @type("uint8") sg = 5;
+    @type("uint8") seg = 0;
+    @type("uint16") score = 0;
 }
 
 export class State extends Schema {
-    @type({ map: Player })
-    players = new MapSchema<Player>();
+    @type({ map: Player }) players = new MapSchema<Player>();
+    @type([Vector2float]) apples = new ArraySchema<Vector2float>();
+
+    appleLastId=0;   
+    gameOverIDs = [];
 
     createApple(){
+        const apple = new Vector2float();
+        apple.id = this.appleLastId++;
+        this.apples.push(apple);
+    }
 
+    collectApple(player: Player, data: any){
+        const apple = this.apples.find((value) => value.id === data.id)
+        if(apple === undefined) return;
+
+        apple.x = Math.floor(Math.random() * 256) - 128;
+        apple.z = Math.floor(Math.random() * 256) - 128;
+        console.log("Apple:" + apple.x + " " + apple.z);  
+        player.score++;
+        console.log(player.score);      
+        player.seg = player.score;
     }
 
     createPlayer(sessionId: string, skin: number) {   
@@ -29,7 +47,9 @@ export class State extends Schema {
     }
 
     removePlayer(sessionId: string) {
-        this.players.delete(sessionId);
+        if(this.players.has(sessionId)){          
+            this.players.delete(sessionId);
+        }
     }
 
     movePlayer (sessionId: string, data: any) {  
@@ -37,53 +57,88 @@ export class State extends Schema {
 
         player.x = data.x;
         player.z = data.z;
+        //console.log("Player:" + data.x + " " + data.z);  
+    }
+
+    gameOver(data) {
+        const segementsPositions = JSON.parse(data);
+        const clientID = segementsPositions.id;
+
+        const gameOverID = this.gameOverIDs.find((value) => value === clientID)
+
+        if(gameOverID !== undefined) return;
+
+        this.gameOverIDs.push(clientID);
+        this.clearGameOverIDs(clientID);
+        this.removePlayer(clientID);      
+
+        for(let i = 0; i < segementsPositions.sPs.length; i++){
+            const apple = new Vector2float();
+            apple.id = this.appleLastId++;
+            apple.x = segementsPositions.sPs[i].x
+            apple.z = segementsPositions.sPs[i].z
+            this.apples.push(apple);
+        }
+    }
+
+    async clearGameOverIDs(clientID){
+        await new Promise(resolve => setTimeout(resolve, 10000));
+
+        const index = this.gameOverIDs.findIndex((v) => v === clientID);
+        
+        if(index <= -1) return;
+
+        this.gameOverIDs.splice(index, 1);
     }
 }
 
 export class StateHandlerRoom extends Room<State> {
-    maxClients = 6;
+    maxClients = 24;
+
     startAppleCount = 100;
+
     skin = 0;
     skins: number[] = [0];
-
-    /*mixArray(arr){
-        var currentIndex = arr.length;
-        var tmpValue, randomIndex;
-        
-        while(currentIndex !== 0){
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-            tmpValue = arr[currentIndex];
-            arr[currentIndex] = arr[randomIndex];
-            arr[randomIndex] = tmpValue;
-        }
-    }*/
-
+    
     onCreate (options) {
         for(var i = 1; i < options.skins; i++){
             this.skins.push(i);
         }
 
         this.skin = options.skin;
-        //this.mixArray(this.skins);
 
         this.setState(new State());   
         
-        this.onMessage("move",(client, data) =>{
+        this.onMessage("move",(client, data) => {
             this.state.movePlayer(client.sessionId, data);
         })
+
+        this.onMessage("collect",(client, data) => {
+            const player = this.state.players.get(client.sessionId); 
+            this.state.collectApple(player, data);
+        })
+
+        this.onMessage("gameOver",(client, data)=>{
+            console.log("game over");            
+            this.state.gameOver(data);
+        })
+
+        for(let i = 0; i < this.startAppleCount; i++){
+            this.state.createApple();
+        }
     }
 
     //onAuth(client, options, req) {
     //    return true;
     //}
 
-    onJoin (client: Client, data: any) {
-        const skin = data.skin;
+    onJoin (client: Client, options: any) {
+        const skin = options.skin;
         this.state.createPlayer(client.sessionId, skin);
     }
 
     onLeave (client) {
+
         this.state.removePlayer(client.sessionId);
     }
 

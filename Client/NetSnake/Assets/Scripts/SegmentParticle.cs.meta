@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 3bd3a561f3a132b4497dc2803f3dced7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _snakeParticle: {fileID: 6337447475170569117, guid: f18bc8e86746677419b9e0340a6aa844,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

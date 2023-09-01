@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 558934008913908835}
   - component: {fileID: 817699452480599855}
   - component: {fileID: 6012641755104753950}
+  - component: {fileID: 1310726941146337355}
   m_Layer: 0
   m_Name: Segment
   m_TagString: Untagged
@@ -69,6 +70,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _meshRenderers:
   - {fileID: 3382016677098538251}
+--- !u!114 &1310726941146337355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19212195865766478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd3a561f3a132b4497dc2803f3dced7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _snakeParticle: {fileID: 6337447475170569117, guid: f18bc8e86746677419b9e0340a6aa844,
+    type: 3}
 --- !u!1001 &7950212632312244980
 PrefabInstance:
   m_ObjectHideFlags: 0
