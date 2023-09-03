@@ -98,7 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bd3a561f3a132b4497dc2803f3dced7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _snakeParticle: {fileID: 6337447475170569117, guid: f18bc8e86746677419b9e0340a6aa844,
+  _snakeParticles: {fileID: 2870881444818272192, guid: f18bc8e86746677419b9e0340a6aa844,
+    type: 3}
+  _particles: {fileID: 6337447475170569117, guid: f18bc8e86746677419b9e0340a6aa844,
     type: 3}
 --- !u!1001 &8783870604746991454
 PrefabInstance:

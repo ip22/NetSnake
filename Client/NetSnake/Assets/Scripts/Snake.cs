@@ -42,7 +42,7 @@ public class Snake : MonoBehaviour
         Destroy(gameObject);
     }
 
-    internal void SetSkin(Material skin) {
+    public void SetSkin(Material skin) {
         GetComponent<SetSkin>().Set(skin);
         _tail.SetSkin(skin);
     }

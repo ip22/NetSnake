@@ -29,6 +29,9 @@ public class EnemyController : MonoBehaviour
                 case "seg":
                     _snake.SetSegmentsCount((byte)changes[i].Value);
                     break;
+                case "score":
+                    MultiplayerManager.Instance.UpdateScore(_clientID, (ushort)changes[i].Value);
+                    break;
                 default:
                     Debug.LogWarning("Can,t read field changes:" + changes[i].Value);
                     break;

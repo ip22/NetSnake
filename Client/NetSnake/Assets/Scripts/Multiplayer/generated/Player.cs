@@ -8,19 +8,22 @@
 using Colyseus.Schema;
 
 public partial class Player : Schema {
-	[Type(0, "uint8")]
+	[Type(0, "string")]
+	public string login = default(string);
+
+	[Type(1, "uint8")]
 	public byte skin = default(byte);
 
-	[Type(1, "number")]
+	[Type(2, "number")]
 	public float x = default(float);
 
-	[Type(2, "number")]
+	[Type(3, "number")]
 	public float z = default(float);
 
-	[Type(3, "uint8")]
+	[Type(4, "uint8")]
 	public byte seg = default(byte);
 
-	[Type(4, "uint16")]
+	[Type(5, "uint16")]
 	public ushort score = default(ushort);
 }
 

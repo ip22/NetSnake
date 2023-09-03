@@ -8,6 +8,7 @@ export class Vector2float extends Schema{
 }
 
 export class Player extends Schema {
+    @type("string") login = "unnamed";
     @type("uint8") skin = 0;
     @type("number") x = Math.floor(Math.random() * 256) - 128;
     @type("number") z = Math.floor(Math.random() * 256) - 128;
@@ -40,8 +41,9 @@ export class State extends Schema {
         player.seg = player.score;
     }
 
-    createPlayer(sessionId: string, skin: number) {   
+    createPlayer(sessionId: string, skin: number, login) {   
         const player = new Player();
+        player.login = login;
         player.skin = skin;
         this.players.set(sessionId, player);
     }
@@ -85,7 +87,7 @@ export class State extends Schema {
         await new Promise(resolve => setTimeout(resolve, 10000));
 
         const index = this.gameOverIDs.findIndex((v) => v === clientID);
-        
+
         if(index <= -1) return;
 
         this.gameOverIDs.splice(index, 1);
@@ -132,13 +134,12 @@ export class StateHandlerRoom extends Room<State> {
     //    return true;
     //}
 
-    onJoin (client: Client, options: any) {
-        const skin = options.skin;
-        this.state.createPlayer(client.sessionId, skin);
+    onJoin (client: Client, data: any) {
+        const skin = data.skin;
+        this.state.createPlayer(client.sessionId, skin, data.login);
     }
 
     onLeave (client) {
-
         this.state.removePlayer(client.sessionId);
     }
 

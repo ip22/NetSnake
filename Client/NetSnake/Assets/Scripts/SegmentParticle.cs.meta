@@ -4,7 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - _snakeParticle: {fileID: 6337447475170569117, guid: f18bc8e86746677419b9e0340a6aa844,
+  - _snakeParticles: {fileID: 2870881444818272192, guid: f18bc8e86746677419b9e0340a6aa844,
       type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
