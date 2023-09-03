@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerSettings : MonoBehaviour
 {
     public static PlayerSettings Instance { get; private set; }
+
     private void Awake() {
         if (Instance) {
             Destroy(gameObject);
@@ -18,7 +19,5 @@ public class PlayerSettings : MonoBehaviour
 
     public string Login { get; private set; }
 
-    public void SetLogin(string login) {
-        Login = login;
-    }
+    public void SetLogin(string login) => Login = login;
 }

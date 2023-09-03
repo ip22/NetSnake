@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class LobbyUI : MonoBehaviour
 {
     public void InputLogin(string login) {
-      PlayerSettings.Instance.SetLogin(login);
+        PlayerSettings.Instance.SetLogin(login);
     }
 
     public void ClickConnect() {

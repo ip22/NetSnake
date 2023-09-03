@@ -3452,6 +3452,10 @@ GameObject:
   m_Component:
   - component: {fileID: 340249525}
   - component: {fileID: 340249524}
+  - component: {fileID: 340249530}
+  - component: {fileID: 340249529}
+  - component: {fileID: 340249528}
+  - component: {fileID: 340249527}
   - component: {fileID: 340249526}
   m_Layer: 0
   m_Name: Multiplayer Manager
@@ -3474,15 +3478,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _colyseusSettings: {fileID: 11400000, guid: 0176be93a8c0a0048bc1ab6e4dc767de, type: 2}
   _menu: {fileID: 1216021579}
+  _playerMultiplayer: {fileID: 340249530}
+  _enemyMultiplayer: {fileID: 340249529}
+  _applesManager: {fileID: 340249528}
+  _leaderboard: {fileID: 340249527}
   skins: {fileID: 340249526}
-  _aim: {fileID: 2403074805118944960, guid: 11ba06dcfaeb4ea46bc7f61aaa52a7cb, type: 3}
-  _controllerPrefab: {fileID: 1419633222110438754, guid: 5349cb629abc7e94885e64dcce2a1058,
-    type: 3}
-  _snakePrefab: {fileID: 5180654188764040971, guid: a2c73566fe33fcd4faf591cc035b2ed2,
-    type: 3}
-  _applePrefab: {fileID: 4903819043047348759, guid: 9b8e9541792537e4085c7d9010259786,
-    type: 3}
-  _text: {fileID: 1590859204}
 --- !u!4 &340249525
 Transform:
   m_ObjectHideFlags: 0
@@ -3521,6 +3521,66 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f42dca4dade106b48a7c29aa9f9e0880, type: 2}
   - {fileID: 2100000, guid: 3bba06e7e381ed34eb4dc55f5346c3a7, type: 2}
   - {fileID: 2100000, guid: d0650bca19c1cbd47a297bc8fe0078e9, type: 2}
+--- !u!114 &340249527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340249523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9183b624232fe479279099152506ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _text: {fileID: 1590859204}
+--- !u!114 &340249528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340249523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f477e5ed4e64cc0449f2061dde970b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _applePrefab: {fileID: 4903819043047348759, guid: 9b8e9541792537e4085c7d9010259786,
+    type: 3}
+--- !u!114 &340249529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340249523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7336b4a9bab3149ad743d99c330b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _snakePrefab: {fileID: 5180654188764040971, guid: a2c73566fe33fcd4faf591cc035b2ed2,
+    type: 3}
+  _leaderboard: {fileID: 340249527}
+--- !u!114 &340249530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340249523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b431881d7464d544f9352ea5dbac25d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aim: {fileID: 2403074805118944960, guid: 11ba06dcfaeb4ea46bc7f61aaa52a7cb, type: 3}
+  _controllerPrefab: {fileID: 1419633222110438754, guid: 5349cb629abc7e94885e64dcce2a1058,
+    type: 3}
+  _snakePrefab: {fileID: 5180654188764040971, guid: a2c73566fe33fcd4faf591cc035b2ed2,
+    type: 3}
+  _leaderboard: {fileID: 340249527}
 --- !u!1001 &342198789
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14769,7 +14829,7 @@ GameObject:
   - component: {fileID: 1590859204}
   - component: {fileID: 1590859203}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Leaderboard Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
