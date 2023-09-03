@@ -9,6 +9,19 @@ using System.Linq;
 // TODO inactive button
 // TODO diffrent apples
 
+public class StartSettings
+{
+    public int redApples;
+    public int greenApples;
+    public int badApples;
+
+    public StartSettings(int redApples, int greenApples, int badApples) {
+        this.redApples = redApples;
+        this.greenApples = greenApples;
+        this.badApples = badApples;
+    }
+}
+
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
     [SerializeField] private GameObject _menu;
@@ -28,10 +41,15 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     }
 
     public async void Connection(int skinIndex) {
+        var settings = new StartSettings(90, 30, 50);
+
         Dictionary<string, object> data = new Dictionary<string, object>() {
             { "skins", skins.length },
             { "skin", skinIndex },
-            { "login", PlayerSettings.Instance.Login }
+            { "login", PlayerSettings.Instance.Login },
+            { "red", settings.redApples },
+            { "green", settings.greenApples },
+            { "bad", settings.badApples }
         };
 
         _room = await Instance.client.JoinOrCreate<State>(GameRoomName, data);
@@ -79,7 +97,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
     private int _skin;
 
-    private void CreatePlayer(Player player) { 
+    private void CreatePlayer(Player player) {
 
         Vector3 position = new Vector3(player.x, 0, player.z);
         Quaternion quaternion = Quaternion.identity;
@@ -95,7 +113,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         var controller = Instantiate(_controllerPrefab);
         controller.Init(_room.SessionId, aim, player, snake);
 
-        snake.SetSkin(skins.GetMaterial(_skin));
+        snake.SetSkin(skins.GetSnakeMaterial(_skin));
 
         AddLeader(_room.SessionId, player);
     }
@@ -118,7 +136,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
         _enemies.Add(key, enemy);
 
-        snake.SetSkin(skins.GetMaterial(player.skin));
+        snake.SetSkin(skins.GetSnakeMaterial(player.skin));
 
         AddLeader(key, player);
     }
@@ -143,12 +161,18 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     [SerializeField] private Apple _applePrefab;
     private Dictionary<Vector2float, Apple> _apples = new Dictionary<Vector2float, Apple>();
 
+    //private void CreateApple(Vector2float vector2Float) {
+    //    Vector3 position = new Vector3(vector2Float.x, 0, vector2Float.z);
+    //    var apple = Instantiate(_applePrefab, position, Quaternion.identity);
+    //    apple.Init(vector2Float);
+    //    _apples.Add(vector2Float, apple);
+    //}
+
     private void CreateApple(Vector2float vector2Float) {
         Vector3 position = new Vector3(vector2Float.x, 0, vector2Float.z);
         var apple = Instantiate(_applePrefab, position, Quaternion.identity);
         apple.Init(vector2Float);
         _apples.Add(vector2Float, apple);
-
     }
 
     private void RemoveApple(int key, Vector2float vector2Float) {

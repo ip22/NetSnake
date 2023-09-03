@@ -3,6 +3,7 @@ import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 
 export class Vector2float extends Schema{
     @type("uint32") id = 0;
+    @type("uint8") type = 1;
     @type("number") x = Math.floor(Math.random() * 256) - 128;
     @type("number") z = Math.floor(Math.random() * 256) - 128;
 }
@@ -23,9 +24,10 @@ export class State extends Schema {
     appleLastId=0;   
     gameOverIDs = [];
 
-    createApple(){
+    createApple(type){
         const apple = new Vector2float();
         apple.id = this.appleLastId++;
+        apple.type = type;
         this.apples.push(apple);
     }
 
@@ -35,9 +37,11 @@ export class State extends Schema {
 
         apple.x = Math.floor(Math.random() * 256) - 128;
         apple.z = Math.floor(Math.random() * 256) - 128;
-        console.log("Apple:" + apple.x + " " + apple.z);  
-        player.score++;
-        console.log(player.score);      
+        console.log("Apple:" + apple.x + " " + apple.z + "points: " + data.pts);  
+        player.score += data.pts;
+        if(player.score <= 0) player.score = 0;
+        //player.score++;
+        console.log(player.score);
         player.seg = player.score;
     }
 
@@ -97,12 +101,18 @@ export class State extends Schema {
 export class StateHandlerRoom extends Room<State> {
     maxClients = 24;
 
-    startAppleCount = 100;
+    startRedCount = 100;
+    startGreenCount = 50;
+    startBadCount = 50;
 
     skin = 0;
     skins: number[] = [0];
     
     onCreate (options) {
+        this.startRedCount = options.red;
+        this.startGreenCount = options.green;
+        this.startBadCount = options.bad;
+
         for(var i = 1; i < options.skins; i++){
             this.skins.push(i);
         }
@@ -125,8 +135,16 @@ export class StateHandlerRoom extends Room<State> {
             this.state.gameOver(data);
         })
 
-        for(let i = 0; i < this.startAppleCount; i++){
-            this.state.createApple();
+        for(let i = 0; i < this.startRedCount; i++){
+            this.state.createApple(1);
+        }
+
+        for(let i = 0; i < this.startGreenCount; i++){
+            this.state.createApple(2);
+        }
+
+        for(let i = 0; i < this.startBadCount; i++){
+            this.state.createApple(3);
         }
     }
 

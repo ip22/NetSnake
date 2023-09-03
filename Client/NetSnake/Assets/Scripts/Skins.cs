@@ -3,11 +3,16 @@ using UnityEngine;
 
 public class Skins : MonoBehaviour
 {
-    [SerializeField] private Material[] _materials;
-    public int length { get { return _materials.Length; } }
+    [SerializeField] private Material[] _sankeMaterials;
+    [SerializeField] private Material[] _appleMaterials;
+    public int length { get { return _sankeMaterials.Length; } }
 
-    public Material GetMaterial(int index) {
-        if (_materials.Length <= index) return _materials[0];
-        return _materials[index];
+    public Material GetSnakeMaterial(int index) {
+        if (_sankeMaterials.Length <= index) return _sankeMaterials[0];
+        return _sankeMaterials[index];
+    }
+
+    public Material GetAppleMaterial(int index) {
+        return _appleMaterials[index];
     }
 }
