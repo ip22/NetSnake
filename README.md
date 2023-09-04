@@ -14,8 +14,9 @@
 
 2. Посмотри как я разбил мультиплеерменеджер, это нормальное декомпозирование)?
 
-2. Ошибки при геймовере в логе в юнити, в бтлде их не заметно:
-
+2. Ошибки при геймовере в логе в юнити, в билде их не заметно:
 Can't remove. Enemy is not exist.
 UnityEngine.Debug:LogError (object)
 EnemyMultiplayer:RemoveEnemy (string,Player) (at Assets/Scripts/Multiplayer/EnemyMultiplayer.cs:39)
+
+Про фор ич услышал, что медленнее работает, буду учитавать)
