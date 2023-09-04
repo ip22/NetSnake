@@ -51,7 +51,7 @@ public class PlayerAim : MonoBehaviour
     private void GameOver() {
         FindObjectOfType<Controller>().Destroy();
         Destroy(gameObject);
-        //MultiplayerManager.Instance.ViewMenu();
+        MultiplayerManager.Instance.ViewMenu();
     }
 
     private void Rotate() {

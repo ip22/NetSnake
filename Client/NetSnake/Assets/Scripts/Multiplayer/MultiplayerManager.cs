@@ -27,14 +27,12 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     [SerializeField] private Leaderboard _leaderboard;
     [field: SerializeField] public Skins skins;
 
-    #region Server
+    private Player _player;
+    private string _login;
     private const string GameRoomName = "state_handler";
-
     private ColyseusRoom<State> _room;
 
-    public string SessionID() {
-        return _room.SessionId;
-    }
+    public string SessionID() => _room.SessionId;
 
     protected override void Awake() {
         base.Awake();
@@ -43,13 +41,21 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         //Connection();
     }
 
+    private int _attempts = 1;
+
+    public int Attempts() => _attempts;
+
+    public int PlayerSkin() => _playerMultiplayer.PlayerSkin();
+
     public async void Connection(int skinIndex) {
+        _login = PlayerSettings.Instance.Login;
+
         var settings = new StartSettings(90, 30, 50);
 
         Dictionary<string, object> data = new Dictionary<string, object>() {
             { "skins", skins.length },
             { "skin", skinIndex },
-            { "login", PlayerSettings.Instance.Login },
+            { "login", _login },
             { "red", settings.redApples },
             { "green", settings.greenApples },
             { "bad", settings.badApples }
@@ -57,7 +63,10 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
         _room = await Instance.client.JoinOrCreate<State>(GameRoomName, data);
         _room.OnStateChange += OnChange;
+
+        print($"Connection ID: {SessionID()}");
     }
+
 
     private void OnChange(State state, bool isFirstState) {
         var roomState = _room.State;
@@ -67,8 +76,10 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         _room.OnStateChange -= OnChange;
 
         state.players.ForEach((key, player) => {
-            if (key == _room.SessionId) _playerMultiplayer.CreatePlayer(player);
-            else _enemyMultiplayer.CreateEnemy(key, player);
+            if (key == _room.SessionId) {
+                _player = player;
+                _playerMultiplayer.CreatePlayer(player, false, Vector3.zero);
+            } else _enemyMultiplayer.CreateEnemy(key, player);
         });
 
         roomState.players.OnAdd += _enemyMultiplayer.CreateEnemy;
@@ -77,6 +88,28 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
         roomState.apples.ForEach(_applesManager.CreateApple);
         roomState.apples.OnAdd += (key, apple) => _applesManager.CreateApple(apple);
         roomState.apples.OnRemove += _applesManager.RemoveApple;
+    }
+
+    public void Restart(int skinIndex) {
+        _room.State.players.OnAdd -= _enemyMultiplayer.CreateEnemy;
+        _attempts++;
+
+        var position = new Vector3(Random.Range(-127, 127), 0, Random.Range(-127, 127));
+
+        Dictionary<string, object> data = new Dictionary<string, object>() {
+            { "login", _login},
+            { "skin", skinIndex },
+            { "x", position.x},
+            { "z", position.z}
+        };
+
+        _playerMultiplayer.CreatePlayer(_player, true, position);
+
+        SendMessage("restart", data);
+
+        _room.State.players.OnAdd += _enemyMultiplayer.CreateEnemy;
+
+        print($"Restart ID: {SessionID()}");
     }
 
     protected override void OnApplicationQuit() {
@@ -89,9 +122,6 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
     public void SendMessage(string key, Dictionary<string, object> data) => _room?.Send(key, data);
 
     public void SendMessage(string key, string json) => _room?.Send(key, json);
-    #endregion
-
-    public int PlayerSkin() { return _playerMultiplayer.PlayerSkin(); }
 
     public void UpdateScore(string sissionID, int score) => _leaderboard.UpdateScore(sissionID, score);
 

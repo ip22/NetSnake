@@ -14,6 +14,8 @@ public class EnemyMultiplayer : MonoBehaviour
     public void CreateEnemy(string key, Player player) {
         _multiplayerManager = MultiplayerManager.Instance;
 
+        if (_multiplayerManager.Attempts() > 1) return;
+
         Vector3 position = new Vector3(player.x, 0, player.z);
 
         var snake = Instantiate(_snakePrefab, position, Quaternion.identity);
@@ -26,6 +28,8 @@ public class EnemyMultiplayer : MonoBehaviour
         snake.SetSkin(_multiplayerManager.skins.GetSnakeMaterial(player.skin));
 
         _leaderboard.AddLeader(key, player);
+
+        print("Create Enemy at: " + player.x + " " + player.z);
     }
 
     public void RemoveEnemy(string key, Player player) {

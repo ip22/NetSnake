@@ -12,14 +12,16 @@ public class PlayerMultiplayer : MonoBehaviour
 
     private MultiplayerManager _multiplayerManager;
 
-    public int PlayerSkin() {
-        return _skin;
-    }
+    public int PlayerSkin() => _skin;
 
-    public void CreatePlayer(Player player) {
+    public void CreatePlayer(Player player, bool restart, Vector3 newPosition) {
         _multiplayerManager = MultiplayerManager.Instance;
 
-        Vector3 position = new Vector3(player.x, 0, player.z);
+        Vector3 position;
+
+        if (restart) position = newPosition;
+        else position = new Vector3(player.x, 0, player.z);
+
         Quaternion quaternion = Quaternion.identity;
 
         var snake = Instantiate(_snakePrefab, position, quaternion);
@@ -36,5 +38,7 @@ public class PlayerMultiplayer : MonoBehaviour
         snake.SetSkin(_multiplayerManager.skins.GetSnakeMaterial(_skin));
 
         _leaderboard.AddLeader(_multiplayerManager.SessionID(), player);
+
+        print("Create Player at: " + player.x + " " + player.z);
     }
 }

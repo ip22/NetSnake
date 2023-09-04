@@ -37,28 +37,26 @@ export class State extends Schema {
 
         apple.x = Math.floor(Math.random() * 256) - 128;
         apple.z = Math.floor(Math.random() * 256) - 128;
-        console.log("Apple: " + apple.x + " " + apple.z + " Points: " + data.pts);  
+        console.log("Apple: " + apple.x + " " + apple.z + " points: " + data.pts);  
         player.score += data.pts;
         if(player.score <= 0) player.score = 0;
         //player.score++;
-        //console.log(player.score);
+        console.log(player.score);
         player.seg = player.score;
     }
 
     createPlayer(sessionId: string, skin: number, login) {
-       /* if(this.players.has(sessionId) ) {
+        if(this.players.has(sessionId) ) {
             const playerRestart =  this.players.get(sessionId);
             playerRestart.skin = skin;
             playerRestart.score = 0;
             return;
-        }        */
-
+        }        
+        
         const player = new Player();
         player.login = login;
         player.skin = skin;
         this.players.set(sessionId, player);
-
-        console.log("Start player:" + player.x + " " + player.z + " Skin " + skin);  
     }
 
     removePlayer(sessionId: string) {
@@ -78,6 +76,7 @@ export class State extends Schema {
     gameOver(data) {
         const segementsPositions = JSON.parse(data);
         const clientID = segementsPositions.id;
+
         const gameOverID = this.gameOverIDs.find((value) => value === clientID)
 
         if(gameOverID !== undefined) return;
@@ -88,25 +87,11 @@ export class State extends Schema {
 
         for(let i = 0; i < segementsPositions.sPs.length; i++){
             const apple = new Vector2float();
-
             apple.id = this.appleLastId++;
             apple.x = segementsPositions.sPs[i].x
             apple.z = segementsPositions.sPs[i].z
             this.apples.push(apple);
         }
-    }
-    
-    restartPlayer (sessionId: string, data: any) {  
-        const player = new Player();
-
-        player.login = data.login;      
-        player.skin = data.skin;
-        player.score = 0;
-        player.x = data.x;
-        player.z = data.z;
-
-        this.players.set(sessionId, player);
-        console.log("Restart player:" + data.x + " " + data.z + " Skin " + data.skin);  
     }
 
     async clearGameOverIDs(clientID){
@@ -155,10 +140,6 @@ export class StateHandlerRoom extends Room<State> {
         this.onMessage("gameOver",(client, data)=>{
             console.log("game over");            
             this.state.gameOver(data);
-        })
-
-        this.onMessage("restart",(client, data) => {
-            this.state.restartPlayer(client.sessionId, data);
         })
 
         for(let i = 0; i < this.startRedCount; i++){

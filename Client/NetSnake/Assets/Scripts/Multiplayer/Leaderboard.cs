@@ -48,7 +48,7 @@ public class Leaderboard : MonoBehaviour
         int i = 1;
 
         foreach (var leader in top8) {
-            text += $"{i}. {leader.Value.login}: {leader.Value.score}\n";
+            text += $"{i}. <b>{leader.Value.login}:</b> {leader.Value.score} - <b>{MultiplayerManager.Instance.Attempts()}</b>\n";
             i++;
         }
 
